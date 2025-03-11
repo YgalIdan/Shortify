@@ -7,7 +7,9 @@ document.querySelector("form").addEventListener("submit", async function (event)
     const response = await fetch("/shorten", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url, expiry_date: expiryDate }),
+        body: JSON.stringify({ 
+            url: url, 
+            expiry_date: expiryDate }),
     });
 
     const result = await response.json();
