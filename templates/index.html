@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shortify - קיצור כתובות</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-100">
+
+    <div class="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">🔗 קיצור קישור</h2>
+
+        <form class="space-y-4">
+            <div>
+                <label for="url" class="block text-gray-700 font-medium">📎 הזן כתובת URL:</label>
+                <input type="url" id="url" placeholder="https://example.com"
+                    class="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none" required>
+            </div>
+
+            <div>
+                <label for="expiry-date" class="block text-gray-700 font-medium">📅 בחר תאריך תפוגה:</label>
+                <input type="date" id="expiry-date"
+                    class="w-full p-3 mt-1 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 focus:outline-none" min="{{ today }}" max="{{ max_date }}">
+            </div>
+
+            <button type="submit"
+                class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300">
+                ✂️ קצר עכשיו!
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="/list_url" class="text-blue-500 hover:underline font-medium">🔗 לרשימת הקישורים המקוצרים</a>
+        </div>
+        
+    </div>
+    <script src="{{ url_for('static', filename='index.js') }}"></script>
+</body>
+</html>
