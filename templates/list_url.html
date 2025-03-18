@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>רשימת קישורים מקוצרים בתוקף</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='list_url.css') }}">
+</head>
+<body>
+    <h1>רשימת קישורים מקוצרים בתוקף</h1>
+    <div class="text-center mt-4">
+        <a href="/" class="text-blue-500 hover:underline font-medium">חזרה לדף הראשי</a>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>קישור מקורי</th>
+                <th>קישור מקוצר</th>
+                <th>תאריך תפוגה</th>
+            </tr>
+        </thead>
+        <tbody id="linksTable">
+            {% for row in data %}
+            <tr>
+                <td><a href="{{row[1]}}">{{row[1]}}</a></td>
+                <td><a href="{{row[2]}}">{{row[2]}}</a></td>
+                <td>{{ row[3] | add_days(7) | format_datetime('%d/%m/%Y') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
