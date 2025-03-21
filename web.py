@@ -35,7 +35,7 @@ def index():
 @app.route("/list_url")
 def listUrl():
     cursor.execute("SELECT * FROM url WHERE created_at + INTERVAL '7 days' >\
-                   NOW()")
+                NOW()")
     data = cursor.fetchall()
     return render_template('list_url.html', data=data)
 
@@ -58,10 +58,10 @@ app.jinja_env.filters['format_datetime'] = format_datetime
 @app.route("/<short_code>")
 def connect(short_code):
     cursor.execute("SELECT created_at FROM url WHERE short_url=%s",
-                   (short_code,))
+                (short_code,))
     date = cursor.fetchone()
     cursor.execute("SELECT long_url FROM url WHERE short_url=%s",
-                   (short_code,))
+                (short_code,))
     url = cursor.fetchone()
     if url is None:
         return jsonify({"ERROR": "URL not found!"}), 400
