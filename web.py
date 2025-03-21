@@ -34,9 +34,12 @@ def index():
 
 @app.route("/list_url")
 def listUrl():
-    cursor.execute("SELECT * FROM url WHERE created_at + INTERVAL '7 days' >\
-                   NOW()")
-    data = cursor.fetchall()
+    try:
+        cursor.execute("SELECT * FROM url WHERE created_at + INTERVAL '7 days' >\
+                    NOW()")
+        data = cursor.fetchall()
+    except Exception as e:
+        print("❌ שגיאה בחיבור ל-PostgreSQL:", str(e))
     return render_template('list_url.html', data=data)
 
 
@@ -57,12 +60,15 @@ app.jinja_env.filters['format_datetime'] = format_datetime
 
 @app.route("/<short_code>")
 def connect(short_code):
-    cursor.execute("SELECT created_at FROM url WHERE short_url=%s",
-                   (short_code,))
-    date = cursor.fetchone()
-    cursor.execute("SELECT long_url FROM url WHERE short_url=%s",
-                   (short_code,))
-    url = cursor.fetchone()
+    try:
+        cursor.execute("SELECT created_at FROM url WHERE short_url=%s",
+                    (short_code,))
+        date = cursor.fetchone()
+        cursor.execute("SELECT long_url FROM url WHERE short_url=%s",
+                    (short_code,))
+        url = cursor.fetchone()
+    except Exception as e:
+        print("❌ שגיאה בחיבור ל-PostgreSQL:", str(e))
     if url is None:
         return jsonify({"ERROR": "URL not found!"}), 400
     if date[0] + timedelta(days=7) < datetime.now():
@@ -78,12 +84,16 @@ def shorten():
     if not url:
         return jsonify({"ERROR": "url missing!"}), 400
     urlShort = generateShortUrl(url)
-    cursor.execute("SELECT short_url FROM url")
-    shortURlInDB = cursor.fetchone()
-    if shortURlInDB is not None or urlShort in shortURlInDB:
-        insertDb(url, urlShort, expiry_date)
-    return jsonify({"message": "URL shortened successfully!", "short_url":
-                    urlShort}), 200
+    try:
+        cursor.execute("SELECT short_url FROM url")
+        shortURlInDB = cursor.fetchone()
+        if shortURlInDB is not None or urlShort in shortURlInDB:
+            insertDb(url, urlShort, expiry_date)
+        return jsonify({"message": "URL shortened successfully!", "short_url":
+                        urlShort}), 200
+    except Exception as e:
+        print("❌ שגיאה בחיבור ל-PostgreSQL:", str(e))
+        return jsonify({"ERROR": str(e)}), 500
 
 
 def insertDb(url, urlShort, expiry_date):
